@@ -2,8 +2,8 @@
 import os
 # For data manipulation
 import pandas as pd
-from binaryClassifierFiji import accelReading as ar
-from binaryClassifierFiji import classifierTraining as ct
+import accelReading as ar
+import classifierTraining as ct
 from sklearn.preprocessing import StandardScaler
 import time
 
@@ -13,9 +13,9 @@ print("Processing Data")
 start = time.time()
 
 filePath = os.getcwd()
-organizedData1 = ar.fullDataOrganizingPipeline(filePath+"/lib/besi-c-default-rtdb-accelerometer-export.json")
-# organizedData2 = ar.fullDataOrganizingPipeline(filePath+"/lib/annotatedAccelerationdata2.json")
-# organizedData3 = ar.fullDataOrganizingPipeline(filePath+"/lib/annotatedAccelerationdata3.json")
+organizedData1 = ar.fullDataOrganizingPipeline(filePath+"/besi-c-default-rtdb-accelerometer-export.json")
+# organizedData2 = ar.fullDataOrganizingPipeline(filePath+"/annotatedAccelerationdata2.json")
+# organizedData3 = ar.fullDataOrganizingPipeline(filePath+"/annotatedAccelerationdata3.json")
 
 #Get dataframes of accelerometer data and concatenate them and convert to dataFrame to create training data input
 dFrame1 = organizedData1[2]
