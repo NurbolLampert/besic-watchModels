@@ -68,7 +68,6 @@ def trainClassifierSVC(dataFrame):
     print(confusion)
     print("Classification Report \n")
     print(reportClass)
-    #TODO: Code to export classifier as a file, and connecting to firebase to download in realtime
 
 
 #def trainClassifierOneVsAllSVC(dataFrame):
