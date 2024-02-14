@@ -45,6 +45,6 @@ def load_and_filter_data(recumbent_hours=None):
 # Adjust the number of hours for recumbent data here (e.g., 2 hours)
 combined_data_wearing = load_and_filter_data(recumbent_hours=2)
 
-combined_data_wearing.to_csv('combined_dataset.csv', index=False)
+combined_data_wearing.to_csv('combined_dataset_wearing.csv', index=False)
 
 print(combined_data_wearing.head())
