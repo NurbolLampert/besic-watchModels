@@ -2,10 +2,12 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
+
+Sequential = tf.keras.models.Sequential
+Dense = tf.keras.layers.Dense
+Adam = tf.keras.optimizers.legacy.Adam
 
 
 # ----------------------------------------------------------------------------------------------------
@@ -185,3 +187,108 @@ processed_df = pd.DataFrame(processed_data)
 # For double checking purposes
 processed_df.to_csv('processed_dataset.csv', index=False)
 
+
+
+
+# ----------------------------------------------------------------------------------------------------
+# BELOW IS CODE FOR MODEL DEVELOPMENT
+
+
+
+# Split the Data into features (X) and labels (y)
+X = processed_df[['Mean_X', 'Mean_Y', 'Mean_Z', 'Avg_Std_Dev_VM']].values
+y = processed_df['Label'].values
+
+# Split the data into training and testing sets
+# 20% of the data is reserved for testing.
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Preprocess
+# Here, we can experiment with scalers e.g.:
+# scaler = MinMaxScaler()
+
+# (In my opinion) StandardScaler is better because it is less sensisitve to outliers and are ideal for mean and standard deviation robustness in range
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Defining
+model = Sequential([
+    Dense(64, activation='relu', input_shape=(X_train.shape[1],)), # 64 neurons with 1 feature set
+    Dense(32, activation='relu'), # 32 neurons
+    Dense(1, activation='sigmoid') # output layer 1
+])
+
+# Compiling
+# Adaptive Moment Estimation used to minimize the loss
+model.compile(optimizer=Adam(learning_rate=0.001),
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
+
+# Training
+# validation_split reserves a portion of the training data for validation to monitor the model's performance on unseen data during training.
+history = model.fit(X_train, y_train, validation_split=0.2, epochs=20, batch_size=10)
+
+# Evaluating
+loss, accuracy = model.evaluate(X_test, y_test)
+print(f'Test Loss: {loss}, Test Accuracy: {accuracy}')
+
+
+
+# ----------------------------------------------------------------------------------------------------
+# BELOW IS FOR TESTING NEW DATA (UNCOMMENT FOR TESTING NEW DATA)
+
+
+
+
+
+# new_df = pd.read_csv('')
+
+# # Adjusted to include time columns
+# def process_window_with_time(window):
+#     # Check if all labels are the same within the window; if not, return None
+#     if window['Label'].nunique() != 1:
+#         return None
+    
+#     start_time = window['Date and Time'].min()
+    
+#     # Calculate mean of X, Y, Z
+#     means = window[[' X-Value', ' Y-Value', ' Z-Value']].mean().to_dict()
+    
+#     # Temporarily add 'Time_Bin' column for 30-second interval grouping
+#     window = window.copy()
+#     window['Time_Bin'] = window['Date and Time'].dt.floor('30s') 
+#     std_devs = window.groupby('Time_Bin')['Vector_Magnitude'].std().mean()
+    
+#     return {
+#         'Start_Date_and_Time': start_time,
+#         'Mean_X': means[' X-Value'], 
+#         'Mean_Y': means[' Y-Value'], 
+#         'Mean_Z': means[' Z-Value'], 
+#         'Avg_Std_Dev_VM': std_devs, 
+#         'Label': window['Label'].iloc[0]
+#     }
+
+
+
+# new_df['Date and Time'] = pd.to_datetime(new_df['Date and Time'])
+# new_df.sort_values('Date and Time', inplace=True)
+# new_df['Vector_Magnitude'] = new_df.apply(vector_magnitude, axis=1)
+# new_processed_data = []
+# for _, window in combined_df.groupby(pd.Grouper(key='Date and Time', freq='5min')):
+#     result = process_window_with_time(window)
+#     if result:
+#         new_processed_data.append(result)
+
+# new_processed_df = pd.DataFrame(new_processed_data)
+
+# features = new_processed_df[['Mean_X', 'Mean_Y', 'Mean_Z', 'Avg_Std_Dev_VM']].values
+# scaler = StandardScaler()
+# scaled_features = scaler.fit_transform(features)
+# predictions = model.predict(scaled_features)
+# predicted_labels = (predictions > 0.5).astype(int).flatten()
+
+# new_processed_df['Probability'] = predictions
+# new_processed_df['Predicted_Label'] = predicted_labels
+
+# new_processed_df.to_csv('predicted_dataset.csv', index=False)
