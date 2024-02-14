@@ -15,5 +15,11 @@ main.py -> accelReading.py (the json file is the data) -> classifierTraining.py 
  - Going Downstairs = 25 minutes
  - Brushing Teeth = 25 minutes
  - Object Picking = 25 minutes
+ - Total: ~ 14 hours and 10 minutes (can be adjusted hence recumbent state could be adjusted to 4 hours = 9 hours and 10 minutes total)
 
 ### data/notWearing
+ - Watch face up ~ 2 hours and 30 minutes
+ - Watch face down ~ 2 hours and 30 minutes
+ - Watch face left ~ 2 hours
+ - Watch face right ~ 2 hours
+ - Total:  ~ 9 hours
