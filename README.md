@@ -5,6 +5,9 @@ main.py -> accelReading.py (the json file is the data) -> classifierTraining.py 
 ## Nurb's binary model:
 
 ### In main.py
+Loading -> Filtering -> Processing into Windows -> Model Development -> Testing
+Loss: 0.087
+Accuracy: 0.964
 
 ### data/wearing: 
  - Recumbent ~ 9 hours (in main.py in the load_and_filter function, the number of hours used for the model can be adjusted e.g recumbent_hours=2)
